@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import mailSvg from "./assets/mail.svg";
 import manSvg from "./assets/man.svg";
 import womanSvg from "./assets/woman.svg";
@@ -9,11 +9,72 @@ import phoneSvg from "./assets/phone.svg";
 import padlockSvg from "./assets/padlock.svg";
 import cwSvg from "./assets/cw.svg";
 import Footer from "./components/footer/Footer";
+import axios from "axios";
 
-const url = "https://randomuser.me/api/";
 const defaultImage = "https://randomuser.me/api/portraits/men/75.jpg";
 
 function App() {
+  const [info, setInfo] = useState({});
+  const [title, setTitle] = useState("");
+  const [titleInfo, setTitleInfo] = useState("");
+
+  const getInfoFromApi = async () => {
+    const url = "https://randomuser.me/api/";
+    try {
+      const { data } = await axios(url);
+      setInfo(data.results[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getInfoFromApi();
+  }, []);
+
+  // console.log(info);
+
+  const selectNew = () => {
+    getInfoFromApi();
+    document.querySelector("#name").click();
+  };
+
+  const whoName = () => {
+    setTitle("name");
+    const {
+      name: { title, first, last },
+    } = info;
+    setTitleInfo(`${title} ${first} ${last}`);
+  };
+
+  const whoMail = () => {
+    setTitle("email");
+    setTitleInfo(info.email);
+  };
+
+  const whoAge = () => {
+    setTitle("age");
+    setTitleInfo(info.dob.age);
+  };
+
+  const whoAddress = () => {
+    setTitle("address");
+    const {
+      location: { city, state, country },
+    } = info;
+    setTitleInfo(`${city} ${state} ${country}`);
+  };
+
+  const whoPhone = () => {
+    setTitle("phone");
+    setTitleInfo(info.phone);
+  };
+
+  const whoPass = () => {
+    setTitle("password");
+    setTitleInfo(info.login.password);
+  };
+
   return (
     <main>
       <div className="block bcg-orange">
@@ -21,31 +82,40 @@ function App() {
       </div>
       <div className="block">
         <div className="container">
-          <img src={defaultImage} alt="random user" className="user-img" />
-          <p className="user-title">My ... is</p>
-          <p className="user-value"></p>
+          <img
+            src={info?.picture?.large}
+            alt="random user"
+            className="user-img"
+          />
+          <p className="user-title">My {title} is</p>
+          <p className="user-value">{titleInfo}</p>
           <div className="values-list">
-            <button className="icon" data-label="name">
+            <button
+              className="icon"
+              data-label="name"
+              onClick={whoName}
+              id="name"
+            >
               <img src={womanSvg} alt="user" id="iconImg" />
             </button>
-            <button className="icon" data-label="email">
+            <button className="icon" data-label="email" onClick={whoMail}>
               <img src={mailSvg} alt="mail" id="iconImg" />
             </button>
-            <button className="icon" data-label="age">
+            <button className="icon" data-label="age" onClick={whoAge}>
               <img src={womanAgeSvg} alt="age" id="iconImg" />
             </button>
-            <button className="icon" data-label="street">
+            <button className="icon" data-label="street" onClick={whoAddress}>
               <img src={mapSvg} alt="map" id="iconImg" />
             </button>
-            <button className="icon" data-label="phone">
+            <button className="icon" data-label="phone" onClick={whoPhone}>
               <img src={phoneSvg} alt="phone" id="iconImg" />
             </button>
-            <button className="icon" data-label="password">
+            <button className="icon" data-label="password" onClick={whoPass}>
               <img src={padlockSvg} alt="lock" id="iconImg" />
             </button>
           </div>
           <div className="btn-group">
-            <button className="btn" type="button">
+            <button className="btn" type="button" onClick={selectNew}>
               new user
             </button>
             <button className="btn" type="button">
