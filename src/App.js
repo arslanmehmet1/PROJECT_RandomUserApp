@@ -11,8 +11,6 @@ import cwSvg from "./assets/cw.svg";
 import Footer from "./components/footer/Footer";
 import axios from "axios";
 
-const defaultImage = "https://randomuser.me/api/portraits/men/75.jpg";
-
 function App() {
   const [info, setInfo] = useState({});
   const [title, setTitle] = useState("");
