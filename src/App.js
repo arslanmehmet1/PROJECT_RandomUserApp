@@ -17,6 +17,7 @@ function App() {
   const [info, setInfo] = useState({});
   const [title, setTitle] = useState("");
   const [titleInfo, setTitleInfo] = useState("");
+  const [newUser, setNewUser] = useState({});
 
   const getInfoFromApi = async () => {
     const url = "https://randomuser.me/api/";
@@ -30,13 +31,18 @@ function App() {
 
   useEffect(() => {
     getInfoFromApi();
+    setTimeout(() => {
+      document.querySelector("#name").click();
+    }, 500);
   }, []);
 
   // console.log(info);
 
   const selectNew = () => {
     getInfoFromApi();
-    document.querySelector("#name").click();
+    setTimeout(() => {
+      document.querySelector("#name").click();
+    }, 400);
   };
 
   const whoName = () => {
@@ -73,6 +79,15 @@ function App() {
   const whoPass = () => {
     setTitle("password");
     setTitleInfo(info.login.password);
+  };
+
+  const addNewUser = () => {
+    setNewUser({
+      firstName: info.name.first,
+      Email: info.email,
+      phone: info.phone,
+      age: info.dob.age,
+    });
   };
 
   return (
@@ -118,7 +133,7 @@ function App() {
             <button className="btn" type="button" onClick={selectNew}>
               new user
             </button>
-            <button className="btn" type="button">
+            <button className="btn" type="button" onClick={addNewUser}>
               add user
             </button>
           </div>
@@ -133,7 +148,12 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              <tr className="body-tr"></tr>
+              <tr className="body-tr">
+                <td className="td">{newUser?.firstName}</td>
+                <td className="td">{newUser?.Email}</td>
+                <td className="td">{newUser?.phone}</td>
+                <td className="td">{newUser?.age}</td>
+              </tr>
             </tbody>
           </table>
         </div>
